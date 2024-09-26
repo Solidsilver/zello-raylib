@@ -1,9 +1,6 @@
 const std = @import("std");
 const math = std.math;
-const raylib = @cImport({
-    @cInclude("raylib.h");
-});
-
+const raylib = @import("raylib.zig").raylib;
 pub const ScreenSide = enum { left, right };
 
 pub const Paddle = struct {
@@ -19,6 +16,10 @@ pub const Paddle = struct {
     pub fn Move(self: *Paddle, dY: f32) void {
         self.pos.y += dY;
         self.pos.y = math.clamp(self.pos.y, 0, self.screenBounds.y - self.size.y);
+    }
+
+    pub fn GetBBox(self: *Paddle) raylib.Rectangle {
+        return raylib.Rectangle{ .x = self.pos.x, .y = self.pos.y, .width = self.size.x, .height = self.size.y };
     }
 };
 
