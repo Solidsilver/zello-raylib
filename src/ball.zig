@@ -51,6 +51,7 @@ pub const Ball = struct {
         // self.isCollided = true;
         self.pos.x = 250;
         self.pos.y = 250;
+        self.velocity = 4;
     }
 };
 
@@ -59,5 +60,5 @@ pub fn New(size: comptime_int, comptime windowX: i32, comptime windowY: i32) Bal
         .x = @as(f32, windowX),
         .y = @as(f32, windowY),
     };
-    return Ball{ .pos = raylib.Vector2{ .x = 200, .y = 200 }, .rad = size, .color = raylib.WHITE, .screenBounds = bounds, .dir = raylib.Vector2{ .x = -0.25, .y = -0.33 }, .velocity = 3, .isCollided = false };
+    return Ball{ .pos = raylib.Vector2{ .x = 200, .y = 200 }, .rad = size, .color = raylib.WHITE, .screenBounds = bounds, .dir = raylib.Vector2{ .x = -0.25, .y = -0.33 }, .velocity = 4, .isCollided = false };
 }

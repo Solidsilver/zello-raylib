@@ -51,6 +51,7 @@ pub fn main() !void {
                 p2.Move(2);
             }
             b.Move();
+            b.velocity += 0.01;
 
             if (b.pos.x - b.rad < 0 or b.pos.x + b.rad > screenWidth) {
                 restartCounter = 1;
