@@ -19,7 +19,7 @@ To run the game, clone the repo, then build and run.
 
 ```sh
 git clone https://github.com/Solidsilver/zello-raylib.git
-cd zello
+cd zello-raylib
 zig build run
 ```
 
