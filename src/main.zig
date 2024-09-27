@@ -5,8 +5,8 @@ const ball = @import("ball.zig");
 const raylib = @import("raylib.zig").raylib;
 
 pub fn main() !void {
-    const screenWidth = 800;
-    const screenHeight = 450;
+    const screenWidth = 1200;
+    const screenHeight = 800;
 
     raylib.InitWindow(screenWidth, screenHeight, "RayZig Window :)");
     raylib.SetTargetFPS(120);
@@ -16,18 +16,16 @@ pub fn main() !void {
     var p2 = paddle.New(paddle.ScreenSide.right, 10, screenWidth, screenHeight);
     var b = ball.New(10, screenWidth, screenHeight);
 
-    var fps: i32 = 0;
-    // var fpsText := std.fmt.allocPrint(allocator: allocator, "{} fps", .{fps})
-    var fps_text_buffer: [20]u8 = undefined; // Allocate enough space
+    var scoreP1: i32 = 0;
+    var scoreP2: i32 = 0;
+
     var count_text_buffer: [20]u8 = undefined; // Allocate enough space
+    var score_buffer: [20]u8 = undefined; // Allocate enough space
     var pause = false;
 
     var restartCounter: i32 = 0;
 
     while (!raylib.WindowShouldClose()) {
-        fps = raylib.GetFPS();
-        const fps_text = std.fmt.bufPrint(&fps_text_buffer, "{d} fps", .{fps}) catch unreachable;
-        fps_text_buffer[fps_text.len] = 0;
 
         // if (raylib.IsKeyDown(raylib.KEY_SPACE)) {
         if (!pause and restartCounter == 0) {
@@ -39,30 +37,36 @@ pub fn main() !void {
                 b.isCollided = false;
             }
             if (raylib.IsKeyDown(raylib.KEY_W)) {
-                p1.Move(-2);
+                p1.Move(-3);
             }
             if (raylib.IsKeyDown(raylib.KEY_S)) {
-                p1.Move(2);
+                p1.Move(3);
             }
             if (raylib.IsKeyDown(raylib.KEY_UP)) {
-                p2.Move(-2);
+                p2.Move(-3);
             }
             if (raylib.IsKeyDown(raylib.KEY_DOWN)) {
-                p2.Move(2);
+                p2.Move(3);
             }
             b.Move();
-            b.velocity += 0.01;
+            // b.velocity += 0.01;
 
-            if (b.pos.x - b.rad < 0 or b.pos.x + b.rad > screenWidth) {
+            if (b.pos.x - b.rad < 0) {
+                scoreP2 += 1;
+                restartCounter = 1;
+                b.Reset();
+            } else if (b.pos.x + b.rad > screenWidth) {
+                scoreP1 += 1;
                 restartCounter = 1;
                 b.Reset();
             }
         } else if (!pause) {
             if (restartCounter > 0) {
                 restartCounter += 1;
-                const count_text = std.fmt.bufPrint(&count_text_buffer, "Restarting... {d}", .{500 - restartCounter}) catch unreachable;
+                const count_text = std.fmt.bufPrint(&count_text_buffer, "Restarting... {d}", .{@divTrunc(500 - restartCounter, 100) + 1}) catch unreachable;
                 count_text_buffer[count_text.len] = 0;
-                raylib.DrawText(count_text.ptr, (screenWidth / 2), 100, 20, raylib.LIGHTGRAY);
+                const txtLen: i32 = @intCast(count_text_buffer.len);
+                raylib.DrawText(count_text.ptr, (screenWidth / 2) - (txtLen * 4), 100, 20, raylib.LIGHTGRAY);
             }
             if (restartCounter > 500) {
                 restartCounter = 0;
@@ -77,8 +81,13 @@ pub fn main() !void {
 
         raylib.BeginDrawing();
         raylib.ClearBackground(raylib.BLACK);
-        const fpsTextLen: i32 = @intCast(fps_text.len);
-        raylib.DrawText(fps_text.ptr, (screenWidth / 2) - (fpsTextLen * 6), 2, 20, raylib.LIGHTGRAY);
+        raylib.DrawFPS(5, 5);
+        var scoreText = std.fmt.bufPrint(&score_buffer, "{d}", .{scoreP1}) catch unreachable;
+        score_buffer[scoreText.len] = 0;
+        raylib.DrawText(scoreText.ptr, (screenWidth / 4), 100, 70, raylib.LIGHTGRAY);
+        scoreText = std.fmt.bufPrint(&score_buffer, "{d}", .{scoreP2}) catch unreachable;
+        score_buffer[scoreText.len] = 0;
+        raylib.DrawText(scoreText.ptr, (screenWidth / 4) * 3, 100, 70, raylib.LIGHTGRAY);
         b.Draw();
         p1.Draw();
         p2.Draw();

@@ -35,9 +35,11 @@ pub const Ball = struct {
         if (topEdge <= 0) {
             self.dir.y *= -1;
             self.pos.y = self.rad - topEdge;
+            self.velocity += 0.1;
         } else if (btmEdge >= self.screenBounds.y) {
             self.dir.y *= -1;
             self.pos.y = 2 * self.screenBounds.y - btmEdge - self.rad;
+            self.velocity += 0.1;
         }
     }
 
@@ -45,13 +47,20 @@ pub const Ball = struct {
         // std.log.info("Ball is bouncing...", .{});
         self.isCollided = true;
         self.dir.x *= -1;
+        self.velocity += 0.1;
     }
     pub fn Reset(self: *Ball) void {
         // std.log.info("Ball is bouncing...", .{});
         // self.isCollided = true;
-        self.pos.x = 250;
-        self.pos.y = 250;
-        self.velocity = 4;
+        self.pos.x = self.screenBounds.x / 2;
+        self.pos.y = self.screenBounds.y / 2;
+        self.velocity = 3;
+        const startDir = raylib.Vector2{
+            .x = @as(f32, @floatFromInt(raylib.GetRandomValue(-50, 50))) / 100,
+            .y = @as(f32, @floatFromInt(raylib.GetRandomValue(-50, 50))) / 100,
+            // .y = 0.33,
+        };
+        self.dir = raylib.Vector2Normalize(startDir);
     }
 };
 
@@ -60,5 +69,14 @@ pub fn New(size: comptime_int, comptime windowX: i32, comptime windowY: i32) Bal
         .x = @as(f32, windowX),
         .y = @as(f32, windowY),
     };
-    return Ball{ .pos = raylib.Vector2{ .x = 200, .y = 200 }, .rad = size, .color = raylib.WHITE, .screenBounds = bounds, .dir = raylib.Vector2{ .x = -0.25, .y = -0.33 }, .velocity = 4, .isCollided = false };
+    const startPos = raylib.Vector2{
+        .x = bounds.x / 2.0,
+        .y = bounds.y / 2.0,
+    };
+    const startDir = raylib.Vector2{
+        .x = @as(f32, @floatFromInt(raylib.GetRandomValue(-50, 50))) / 100,
+        .y = @as(f32, @floatFromInt(raylib.GetRandomValue(-50, 50))) / 100,
+        // .y = 0.33,
+    };
+    return Ball{ .pos = startPos, .rad = size, .color = raylib.WHITE, .screenBounds = bounds, .dir = raylib.Vector2Normalize(startDir), .velocity = 3, .isCollided = false };
 }
