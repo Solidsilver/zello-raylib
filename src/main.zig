@@ -8,7 +8,7 @@ pub fn main() !void {
     const screenWidth = 1200;
     const screenHeight = 800;
 
-    // raylib.SetConfigFlags(raylib.FLAG_WINDOW_RESIZABLE);
+    raylib.SetConfigFlags(raylib.FLAG_WINDOW_RESIZABLE);
     raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT);
     raylib.InitWindow(screenWidth, screenHeight, "RayPong");
     raylib.SetTargetFPS(120);
