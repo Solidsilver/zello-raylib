@@ -11,7 +11,7 @@ A basic Pong game implemented in Zig using the [Raylib library](https://www.rayl
 
 ## Requirements
 
-* Zig compiler (version 0.11.0 or later recommended)
+* Zig compiler (version 0.14.0 or later recommended)
 
 ## Getting it Running
 
@@ -19,7 +19,7 @@ To run the game, clone the repo, then build and run.
 
 ```sh
 git clone https://github.com/Solidsilver/zello-raylib.git
-cd zello
+cd zello-raylib
 zig build run
 ```
 

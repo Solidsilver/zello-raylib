@@ -8,7 +8,9 @@ pub fn main() !void {
     const screenWidth = 1200;
     const screenHeight = 800;
 
-    raylib.InitWindow(screenWidth, screenHeight, "RayZig Window :)");
+    // raylib.SetConfigFlags(raylib.FLAG_WINDOW_RESIZABLE);
+    raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT);
+    raylib.InitWindow(screenWidth, screenHeight, "RayPong");
     raylib.SetTargetFPS(120);
     defer raylib.CloseWindow();
 
@@ -26,8 +28,6 @@ pub fn main() !void {
     var restartCounter: i32 = 0;
 
     while (!raylib.WindowShouldClose()) {
-
-        // if (raylib.IsKeyDown(raylib.KEY_SPACE)) {
         if (!pause and restartCounter == 0) {
             if (raylib.CheckCollisionCircleRec(b.pos, b.rad, p1.GetBBox()) or raylib.CheckCollisionCircleRec(b.pos, b.rad, p2.GetBBox())) {
                 if (!b.isCollided) {
@@ -49,7 +49,6 @@ pub fn main() !void {
                 p2.Move(3);
             }
             b.Move();
-            // b.velocity += 0.01;
 
             if (b.pos.x - b.rad < 0) {
                 scoreP2 += 1;
